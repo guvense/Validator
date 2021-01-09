@@ -15,13 +15,7 @@ import java.util.Map;
 
 public class ValidatorParser {
 
-    private AnnotationFieldParser annotationFieldParser;
-
-    public ValidatorParser() {
-        this.annotationFieldParser = new AnnotationFieldParser();
-    }
-
-    public Map<String, List<ValidatorMethod>> parse(List<Element> validators) throws ClassNotFoundException {
+    public static Map<String, List<ValidatorMethod>> parse(List<Element> validators) throws ClassNotFoundException {
         Map<String, List<ValidatorMethod>> validatorObjects = new HashMap<>();
 
         for (Element validator : validators) {
@@ -30,7 +24,7 @@ public class ValidatorParser {
             String argumentType = ((ExecutableType) validator.asType())
                     .getParameterTypes().get(0).toString();
 
-            ValidatorDetail validatorDetail = annotationFieldParser.parseValidatorDetail(validator);
+            ValidatorDetail validatorDetail = AnnotationFieldParser.parseValidatorDetail(validator);
 
             ValidatorMethod newValidatorMethod = new ValidatorMethod();
             newValidatorMethod.setArgumentType(argumentType);

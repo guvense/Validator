@@ -15,7 +15,7 @@ import java.util.Map;
 public class AnnotationFieldParser {
 
     @SuppressWarnings("unchecked")
-    public ValidatorDetail parseValidatorDetail(Element element) throws ClassNotFoundException {
+    public static ValidatorDetail parseValidatorDetail(Element element) throws ClassNotFoundException {
 
         ValidatorDetail validatorDetail = new ValidatorDetail();
 

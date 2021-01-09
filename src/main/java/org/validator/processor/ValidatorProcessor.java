@@ -33,16 +33,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes(
-        "org.example.annotation.Valid")
+        "org.validator.annotation.Valid")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class ValidatorProcessor extends AbstractProcessor {
 
-    private ValidatorParser validatorParser;
-
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
-        validatorParser = new ValidatorParser();
         super.init(processingEnv);
     }
 
@@ -64,9 +61,8 @@ public class ValidatorProcessor extends AbstractProcessor {
                 if (validators.isEmpty()) {
                     continue;
                 }
-
                 try {
-                    loop(validatorParser.parse(validators));
+                    loop(ValidatorParser.parse(validators));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
