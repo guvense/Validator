@@ -68,5 +68,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.30</version>
+        </dependency>
+
     </dependencies>
 </project>

@@ -5,6 +5,7 @@ import com.google.auto.service.AutoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.validator.constant.Condition;
+import org.validator.generator.SkeletonGenerator;
 import org.validator.model.ValidatorDetail;
 import org.validator.model.ValidatorMethod;
 import org.validator.parser.AnnotationFieldParser;
