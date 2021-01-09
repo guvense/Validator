@@ -8,6 +8,7 @@ import org.validator.constant.Condition;
 import org.validator.model.ValidatorDetail;
 import org.validator.model.ValidatorMethod;
 import org.validator.parser.AnnotationFieldParser;
+import org.validator.parser.ValidatorParser;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -37,19 +38,17 @@ import java.util.stream.Collectors;
 @AutoService(Processor.class)
 public class ValidatorProcessor extends AbstractProcessor {
 
-    private AnnotationFieldParser annotationFieldParser;
+    private ValidatorParser validatorParser;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
-        annotationFieldParser = new AnnotationFieldParser();
+        validatorParser = new ValidatorParser();
         super.init(processingEnv);
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
         try {
-
             for (TypeElement annotation : annotations) {
 
                 Set<? extends Element> annotatedElements
@@ -62,49 +61,19 @@ public class ValidatorProcessor extends AbstractProcessor {
 
                 List<Element> validators = annotatedMethods.get(true);
 
-
                 if (validators.isEmpty()) {
                     continue;
                 }
 
-                Map<String, List<ValidatorMethod>> validatorObjects = new HashMap<>();
-
-                for (Element validator : validators) {
-                    String className = ((TypeElement) validator.getEnclosingElement()).getQualifiedName().toString();
-                    String methodName = validator.getSimpleName().toString();
-                    String argumentType = ((ExecutableType) validator.asType())
-                            .getParameterTypes().get(0).toString();
-
-                    ValidatorDetail validatorDetail = annotationFieldParser.parseValidatorDetail(validator);
-
-                    ValidatorMethod newValidatorMethod = new ValidatorMethod();
-                    newValidatorMethod.setArgumentType(argumentType);
-                    newValidatorMethod.setMethodName(methodName);
-                    newValidatorMethod.setValidatorDetail(validatorDetail);
-
-
-                    if (null != validatorObjects.get(className)) {
-                        List<ValidatorMethod> validatorMethods = validatorObjects.get(className);
-                        List<ValidatorMethod> copied = new ArrayList<>(validatorMethods);
-                        copied.add(newValidatorMethod);
-                        validatorObjects.put(className, copied);
-                    } else {
-                        List<ValidatorMethod> createdList = Collections.singletonList(newValidatorMethod);
-                        validatorObjects.put(className, createdList);
-                    }
-                }
-
                 try {
-                    loop(validatorObjects);
+                    loop(validatorParser.parse(validators));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                             "Error: " + ExceptionUtils.getStackTrace(e));
                 }
-
             }
-
         } catch (Exception e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                     "Error" + ExceptionUtils.getStackTrace(e));
@@ -140,7 +109,7 @@ public class ValidatorProcessor extends AbstractProcessor {
                 .createSourceFile(classNameImpl);
 
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-
+            
             if (packageName != null) {
                 out.print("package ");
                 out.print(packageName);
@@ -178,7 +147,7 @@ public class ValidatorProcessor extends AbstractProcessor {
                 out.print(")");
                 out.println("{");
 
-                if(validatorDetail.getCondition() == Condition.IsNotNull) {
+                if (validatorDetail.getCondition() == Condition.IsNotNull) {
                     out.print("\t\t\tif( null == ");
                     out.print(uncapitalizedParameter);
                     out.print(".");
@@ -200,5 +169,4 @@ public class ValidatorProcessor extends AbstractProcessor {
 
         }
     }
-
 }
