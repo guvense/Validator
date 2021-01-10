@@ -1,4 +1,4 @@
-${package}
+package ${packageName}
 
 public class ${className} implements ${interfaceName}
 {

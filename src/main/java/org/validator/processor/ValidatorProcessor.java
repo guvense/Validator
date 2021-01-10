@@ -42,6 +42,7 @@ public class ValidatorProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+
     }
 
     @Override
@@ -105,6 +106,16 @@ public class ValidatorProcessor extends AbstractProcessor {
         JavaFileObject builderFile = processingEnv.getFiler()
                 .createSourceFile(classNameImpl);
 
+        try {
+            SkeletonGenerator skeletonGenerator = new SkeletonGenerator();
+            skeletonGenerator.fillData("djj","hdd", "djd", "sdks"
+                    ,"ddk", "kdk");
+            skeletonGenerator.write(builderFile);
+        }catch (Exception e) {
+            printError(ExceptionUtils.getStackTrace(e));
+        }
+
+
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
             
             if (packageName != null) {
@@ -165,5 +176,9 @@ public class ValidatorProcessor extends AbstractProcessor {
             out.println("}");
 
         }
+    }
+
+    private void printError(String errorMessage) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, errorMessage);
     }
 }
