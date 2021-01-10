@@ -1,14 +1,13 @@
 package org.validator.model;
 
 
-import org.validator.constant.Condition;
+import org.validator.generator.constant.ConditionRule;
 
 public class ValidatorDetail {
     private String source;
-    private Condition condition;
+    private ConditionRule condition;
     private Class<? extends Throwable>  exception;
     private String errorMessage;
-
 
     public ValidatorDetail(){};
 
@@ -20,11 +19,11 @@ public class ValidatorDetail {
         this.source = source;
     }
 
-    public Condition getCondition() {
+    public ConditionRule getCondition() {
         return condition;
     }
 
-    public void setCondition(Condition condition) {
+    public void setCondition(ConditionRule condition) {
         this.condition = condition;
     }
 

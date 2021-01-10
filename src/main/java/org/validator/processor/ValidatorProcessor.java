@@ -4,11 +4,13 @@ package org.validator.processor;
 import com.google.auto.service.AutoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.validator.constant.Condition;
-import org.validator.generator.SkeletonGenerator;
+
+import org.validator.generator.ModelType;
+import org.validator.generator.Generator;
+import org.validator.generator.constant.ConditionRule;
+import org.validator.generator.model.ConditionModel;
 import org.validator.model.ValidatorDetail;
 import org.validator.model.ValidatorMethod;
-import org.validator.parser.AnnotationFieldParser;
 import org.validator.parser.ValidatorParser;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -25,9 +27,6 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -106,76 +105,35 @@ public class ValidatorProcessor extends AbstractProcessor {
         JavaFileObject builderFile = processingEnv.getFiler()
                 .createSourceFile(classNameImpl);
 
-        try {
-            SkeletonGenerator skeletonGenerator = new SkeletonGenerator();
-            skeletonGenerator.fillData("djj","hdd", "djd", "sdks"
-                    ,"ddk", "kdk");
-            skeletonGenerator.write(builderFile);
-        }catch (Exception e) {
-            printError(ExceptionUtils.getStackTrace(e));
-        }
-
-
-        try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-            
-            if (packageName != null) {
-                out.print("package ");
-                out.print(packageName);
-                out.println(";");
-                out.println();
-            }
-
-            validatorMethods.forEach(validatorMethod -> {
-                out.print("import ");
-                out.print(validatorMethod.getArgumentType());
-                out.println(";\n");
-            });
-            out.print("@Component");
-            out.println();
-            out.print("public class ");
-            out.print(builderSimpleClassName);
-            out.print(" implements ");
-            out.print(interfaceName);
-            out.println(" {");
-            out.println();
-
-
+            String finalPackageName = packageName;
             validatorMethods.forEach(validatorMethod -> {
                 String argumentTypeCore = validatorMethod.getArgumentType()
                         .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
                 String uncapitalizedParameter = StringUtils.uncapitalize(argumentTypeCore);
-
                 ValidatorDetail validatorDetail = validatorMethod.getValidatorDetail();
-                out.print("    public void ");
-                out.print(validatorMethod.getMethodName());
-                out.print("(");
-                out.print(argumentTypeCore);
-                out.print(" ");
-                out.print(uncapitalizedParameter);
-                out.print(")");
-                out.println("{");
+                String capitalizedParameter = StringUtils.capitalize(argumentTypeCore);
 
-                if (validatorDetail.getCondition() == Condition.IsNotNull) {
-                    out.print("\t\t\tif( null == ");
-                    out.print(uncapitalizedParameter);
-                    out.print(".");
-                    out.print("get");
-                    out.print(StringUtils.capitalize(validatorDetail.getSource()));
-                    out.print("())");
-                    out.println("{");
-                    out.print("\t\t\t\tthrow new ");
-                    out.print(validatorDetail.getException().getName());
-                    out.print("(\"");
-                    out.print(validatorDetail.getErrorMessage());
-                    out.print("\");");
-                    out.println("}");
+                if (validatorDetail.getCondition() == ConditionRule.IsNotNull) {
+                    try {
+                        Generator generator = new Generator();
+                        ConditionModel conditionModel = new ConditionModel();
+                        conditionModel.setPackageName(finalPackageName);
+                        conditionModel.setInterfaceName(interfaceName);
+                        conditionModel.setClassName(builderSimpleClassName);
+                        conditionModel.setCondition(ConditionRule.IsNotNull);
+                        conditionModel.setSource(capitalizedParameter);
+                        conditionModel.setMethodName(validatorMethod.getMethodName());
+                        conditionModel.setParameterName(uncapitalizedParameter);
+                        conditionModel.setParameterType(capitalizedParameter);
+                        conditionModel.setException(validatorDetail.getException().getName());
+                        conditionModel.setExceptionCode(validatorDetail.getErrorMessage());
+                        generator.write(builderFile, conditionModel, ModelType.CONDITION);
+
+                    } catch (Exception e) {
+                        printError(ExceptionUtils.getStackTrace(e));
+                    }
                 }
-                out.println("}");
             });
-
-            out.println("}");
-
-        }
     }
 
     private void printError(String errorMessage) {
