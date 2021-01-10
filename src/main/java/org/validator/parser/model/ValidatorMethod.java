@@ -1,4 +1,4 @@
-package org.validator.model;
+package org.validator.parser.model;
 
 public class ValidatorMethod {
     private String methodName;

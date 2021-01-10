@@ -1,9 +1,8 @@
 package org.validator.parser;
 
 
-import org.graalvm.compiler.core.common.calc.Condition;
 import org.validator.generator.constant.ConditionRule;
-import org.validator.model.ValidatorDetail;
+import org.validator.parser.model.ValidatorDetail;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;

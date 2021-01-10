@@ -1,4 +1,4 @@
-package org.validator.model;
+package org.validator.parser.model;
 
 
 import org.validator.generator.constant.ConditionRule;

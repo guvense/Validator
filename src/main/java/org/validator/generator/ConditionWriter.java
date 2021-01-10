@@ -1,11 +1,11 @@
 package org.validator.generator;
 
-import org.validator.generator.model.ConditionModel;
+import org.validator.generator.writer.ConditionWritableObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConditionWriter implements Writable<ConditionModel> {
+public class ConditionWriter implements Writable<ConditionWritableObject> {
 
     public ConditionWriter(){};
 
@@ -15,21 +15,14 @@ public class ConditionWriter implements Writable<ConditionModel> {
     }
 
     @Override
-    public Map<String, Object> prepareData(ConditionModel conditionModel) {
+    public Map<String, Object> prepareData(ConditionWritableObject conditionModel) {
         Map<String, Object> templateData = new HashMap<>();
-        conditionModel.setCondition(conditionModel.getCondition());
-        conditionModel.setClassName(conditionModel.getClassName());
-        conditionModel.setInterfaceName(conditionModel.getInterfaceName());
-        conditionModel.setMethodName(conditionModel.getMethodName());
-        conditionModel.setPackageName(conditionModel.getPackageName());
-        conditionModel.setParameterName(conditionModel.getParameterName());
-        conditionModel.setParameterType(conditionModel.getParameterType());
-        templateData.put("condition", conditionModel);
+        templateData.put("conditionModel", conditionModel);
         return templateData;
     }
 
     @Override
-    public String getTemplateName(ConditionModel baseModel) {
+    public String getTemplateName(ConditionWritableObject baseModel) {
         return baseModel.getClass().getSimpleName();
     }
 

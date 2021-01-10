@@ -1,8 +1,8 @@
 package org.validator.parser;
 
 
-import org.validator.model.ValidatorDetail;
-import org.validator.model.ValidatorMethod;
+import org.validator.parser.model.ValidatorDetail;
+import org.validator.parser.model.ValidatorMethod;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;

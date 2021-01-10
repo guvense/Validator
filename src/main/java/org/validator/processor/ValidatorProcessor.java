@@ -9,8 +9,11 @@ import org.validator.generator.ModelType;
 import org.validator.generator.Generator;
 import org.validator.generator.constant.ConditionRule;
 import org.validator.generator.model.ConditionModel;
-import org.validator.model.ValidatorDetail;
-import org.validator.model.ValidatorMethod;
+import org.validator.generator.model.ConditionObject;
+import org.validator.generator.model.FunctionDeclarationModel;
+import org.validator.generator.writer.ConditionWritableObject;
+import org.validator.parser.model.ValidatorDetail;
+import org.validator.parser.model.ValidatorMethod;
 import org.validator.parser.ValidatorParser;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -26,7 +29,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -105,35 +108,46 @@ public class ValidatorProcessor extends AbstractProcessor {
         JavaFileObject builderFile = processingEnv.getFiler()
                 .createSourceFile(classNameImpl);
 
-            String finalPackageName = packageName;
-            validatorMethods.forEach(validatorMethod -> {
-                String argumentTypeCore = validatorMethod.getArgumentType()
-                        .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
-                String uncapitalizedParameter = StringUtils.uncapitalize(argumentTypeCore);
-                ValidatorDetail validatorDetail = validatorMethod.getValidatorDetail();
-                String capitalizedParameter = StringUtils.capitalize(argumentTypeCore);
+        List<ConditionObject> conditionObjects = new ArrayList<>();
 
-                if (validatorDetail.getCondition() == ConditionRule.IsNotNull) {
-                    try {
-                        Generator generator = new Generator();
-                        ConditionModel conditionModel = new ConditionModel();
-                        conditionModel.setPackageName(finalPackageName);
-                        conditionModel.setInterfaceName(interfaceName);
-                        conditionModel.setClassName(builderSimpleClassName);
-                        conditionModel.setCondition(ConditionRule.IsNotNull);
-                        conditionModel.setSource(capitalizedParameter);
-                        conditionModel.setMethodName(validatorMethod.getMethodName());
-                        conditionModel.setParameterName(uncapitalizedParameter);
-                        conditionModel.setParameterType(capitalizedParameter);
-                        conditionModel.setException(validatorDetail.getException().getName());
-                        conditionModel.setExceptionCode(validatorDetail.getErrorMessage());
-                        generator.write(builderFile, conditionModel, ModelType.CONDITION);
+        validatorMethods.forEach(validatorMethod -> {
+            String argumentTypeCore = validatorMethod.getArgumentType()
+                    .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
+            String parameterName = StringUtils.uncapitalize(argumentTypeCore);
+            ValidatorDetail validatorDetail = validatorMethod.getValidatorDetail();
+            String parameterType = StringUtils.capitalize(argumentTypeCore);
+            String methodName = validatorMethod.getMethodName();
 
-                    } catch (Exception e) {
-                        printError(ExceptionUtils.getStackTrace(e));
-                    }
-                }
-            });
+            FunctionDeclarationModel functionDeclarationModel = new FunctionDeclarationModel();
+            functionDeclarationModel.setMethodName(methodName);
+            functionDeclarationModel.setParameterName(parameterName);
+            functionDeclarationModel.setParameterType(parameterType);
+
+            ConditionModel conditionModel = new ConditionModel();
+            conditionModel.setExceptionCode(validatorDetail.getErrorMessage());
+            conditionModel.setException(validatorDetail.getException().getName());
+            conditionModel.setSource(StringUtils.capitalize(validatorDetail.getSource()));
+            conditionModel.setCondition(validatorDetail.getCondition());
+
+            ConditionObject conditionObject = new ConditionObject();
+            conditionObject.setConditionModel(conditionModel);
+            conditionObject.setFunctionDeclarationModel(functionDeclarationModel);
+            conditionObjects.add(conditionObject);
+        });
+
+        ConditionWritableObject conditionWritableObject = new ConditionWritableObject();
+        conditionWritableObject.setPackageName(packageName);
+        conditionWritableObject.setInterfaceName(interfaceName);
+        conditionWritableObject.setClassName(builderSimpleClassName);
+        conditionWritableObject.setConditionObjects(conditionObjects);
+
+        try {
+            Generator generator = new Generator();
+            generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
+
+        } catch (Exception e) {
+            printError(ExceptionUtils.getStackTrace(e));
+        }
     }
 
     private void printError(String errorMessage) {
