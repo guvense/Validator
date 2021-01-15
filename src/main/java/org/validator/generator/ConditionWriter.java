@@ -1,6 +1,7 @@
 package org.validator.generator;
 
 import org.validator.generator.writer.ConditionWritableObject;
+import org.validator.util.condition.ConditionRuleChecker;
 
 import java.util.HashMap;
 import java.util.Map;
