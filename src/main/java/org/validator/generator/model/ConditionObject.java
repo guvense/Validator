@@ -1,19 +1,20 @@
 package org.validator.generator.model;
 
 
+import java.util.List;
 
 public class ConditionObject {
 
-    // TODO Add as list
-    private ConditionModel conditionModel;
+
+    private List<ConditionModel> conditionModels;
     private FunctionDeclarationModel functionDeclarationModel;
 
-    public ConditionModel getConditionModel() {
-        return conditionModel;
+    public List<ConditionModel> getConditionModels() {
+        return conditionModels;
     }
 
-    public void setConditionModel(ConditionModel conditionModel) {
-        this.conditionModel = conditionModel;
+    public void setConditionModels(List<ConditionModel> conditionModels) {
+        this.conditionModels = conditionModels;
     }
 
     public FunctionDeclarationModel getFunctionDeclarationModel() {

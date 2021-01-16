@@ -7,7 +7,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import org.validator.generator.ModelType;
 import org.validator.generator.Generator;
-import org.validator.generator.constant.ConditionRule;
 import org.validator.generator.model.ConditionModel;
 import org.validator.generator.model.ConditionObject;
 import org.validator.generator.model.FunctionDeclarationModel;
@@ -36,7 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes(
-        "org.validator.annotation.Valid")
+        "org.validator.annotation.Valids")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class ValidatorProcessor extends AbstractProcessor {
@@ -61,12 +60,11 @@ public class ValidatorProcessor extends AbstractProcessor {
                                         ((ExecutableType) element.asType()).getParameterTypes().size() == 1));
 
                 List<Element> validators = annotatedMethods.get(true);
-
                 if (validators.isEmpty()) {
                     continue;
                 }
                 try {
-                    loop(ValidatorParser.parse(validators));
+                    loop(ValidatorParser.parse(validators, processingEnv));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -93,7 +91,6 @@ public class ValidatorProcessor extends AbstractProcessor {
     }
 
     private void fill(String className, List<ValidatorMethod> validatorMethods) throws IOException {
-
         String packageName = null;
         int lastDot = className.lastIndexOf('.');
         if (lastDot > 0) {
@@ -114,7 +111,7 @@ public class ValidatorProcessor extends AbstractProcessor {
             String argumentTypeCore = validatorMethod.getArgumentType()
                     .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
             String parameterName = StringUtils.uncapitalize(argumentTypeCore);
-            ValidatorDetail validatorDetail = validatorMethod.getValidatorDetail();
+            List<ValidatorDetail> validatorDetails = validatorMethod.getValidatorDetails();
             String parameterType = StringUtils.capitalize(argumentTypeCore);
             String methodName = validatorMethod.getMethodName();
 
@@ -123,18 +120,22 @@ public class ValidatorProcessor extends AbstractProcessor {
             functionDeclarationModel.setParameterName(parameterName);
             functionDeclarationModel.setParameterType(parameterType);
 
-            ConditionModel conditionModel = new ConditionModel();
-            conditionModel.setExceptionCode(validatorDetail.getErrorMessage());
-            conditionModel.setException(validatorDetail.getException().getName());
-            conditionModel.setSource(StringUtils.capitalize(validatorDetail.getSource()));
-            conditionModel.setCondition(validatorDetail.getCondition());
+            List<ConditionModel> conditionModels = new ArrayList<>();
+
+            for(ValidatorDetail validatorDetail : validatorDetails) {
+                ConditionModel conditionModel = new ConditionModel();
+                conditionModel.setExceptionCode(validatorDetail.getErrorMessage());
+                conditionModel.setException(validatorDetail.getException().getName());
+                conditionModel.setSource(StringUtils.capitalize(validatorDetail.getSource()));
+                conditionModel.setCondition(validatorDetail.getCondition());
+                conditionModels.add(conditionModel);
+            }
 
             ConditionObject conditionObject = new ConditionObject();
-            conditionObject.setConditionModel(conditionModel);
+            conditionObject.setConditionModels(conditionModels);
             conditionObject.setFunctionDeclarationModel(functionDeclarationModel);
             conditionObjects.add(conditionObject);
         });
-
         ConditionWritableObject conditionWritableObject = new ConditionWritableObject();
         conditionWritableObject.setPackageName(packageName);
         conditionWritableObject.setInterfaceName(interfaceName);

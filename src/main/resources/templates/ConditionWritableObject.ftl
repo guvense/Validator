@@ -11,11 +11,13 @@ public class ${conditionModel.className} implements ${conditionModel.interfaceNa
 
     public void ${condition.functionDeclarationModel.methodName}(${condition.functionDeclarationModel.parameterType} ${condition.functionDeclarationModel.parameterName}) {
 
-        if(check(${condition.conditionModel.condition},  ${condition.functionDeclarationModel.parameterName}.get${condition.conditionModel.source}())) {
+    <#list condition.conditionModels as conditionObj>
+        if(check(${conditionObj.condition},  ${condition.functionDeclarationModel.parameterName}.get${conditionObj.source}())) {
 
-            throw new ${condition.conditionModel.exception}("${condition.conditionModel.exceptionCode}");
+            throw new ${conditionObj.exception}("${conditionObj.exceptionCode}");
 
         }
+    </#list>
     }
 </#list>
 }

@@ -1,9 +1,11 @@
 package org.validator.parser.model;
 
+import java.util.List;
+
 public class ValidatorMethod {
     private String methodName;
     private String argumentType;
-    private ValidatorDetail validatorDetail;
+    private List<ValidatorDetail> validatorDetails;
 
     public String getMethodName() {
         return methodName;
@@ -21,11 +23,11 @@ public class ValidatorMethod {
         this.argumentType = argumentType;
     }
 
-    public ValidatorDetail getValidatorDetail() {
-        return validatorDetail;
+    public List<ValidatorDetail> getValidatorDetails() {
+        return validatorDetails;
     }
 
-    public void setValidatorDetail(ValidatorDetail validatorDetail) {
-        this.validatorDetail = validatorDetail;
+    public void setValidatorDetails(List<ValidatorDetail> validatorDetails) {
+        this.validatorDetails = validatorDetails;
     }
 }
