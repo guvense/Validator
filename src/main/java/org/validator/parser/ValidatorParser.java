@@ -27,7 +27,6 @@ public class ValidatorParser {
                     .getParameterTypes().get(0).toString();
 
             List<ValidatorDetail> validatorDetails = AnnotationFieldParser.parseValidatorDetail(validator);
-            printError(validatorDetails.get(0).getSource(), processingEnv);
 
             ValidatorMethod newValidatorMethod = new ValidatorMethod();
             newValidatorMethod.setArgumentType(argumentType);
@@ -45,7 +44,6 @@ public class ValidatorParser {
                 validatorObjects.put(className, createdList);
             }
         }
-        printError("tet", processingEnv);
         return validatorObjects;
     }
 
