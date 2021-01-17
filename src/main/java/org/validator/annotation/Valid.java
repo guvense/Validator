@@ -10,8 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 @Repeatable(Valids.class)
 public @interface Valid {
-    String source() default "";
-    ConditionRule condition() default ConditionRule.NOOP;
+    String source();
+    ConditionRule condition();
     Class<? extends Throwable> targetException() default Exception.class;
     String errorMessage() default "";
 }

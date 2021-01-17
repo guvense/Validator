@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ValidatorParser {
 
-    public static Map<String, List<ValidatorMethod>> parse(List<Element> validators, ProcessingEnvironment processingEnv) throws ClassNotFoundException {
+    public static Map<String, List<ValidatorMethod>> parse(List<Element> validators) throws ClassNotFoundException {
         Map<String, List<ValidatorMethod>> validatorObjects = new HashMap<>();
 
         for (Element validator : validators) {
@@ -46,9 +46,4 @@ public class ValidatorParser {
         }
         return validatorObjects;
     }
-
-    private static void printError(String errorMessage, ProcessingEnvironment processingEnvironment) {
-        processingEnvironment.getMessager().printMessage(Diagnostic.Kind.ERROR, errorMessage);
-    }
-
 }

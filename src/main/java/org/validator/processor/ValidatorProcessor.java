@@ -2,16 +2,12 @@ package org.validator.processor;
 
 
 import com.google.auto.service.AutoService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import org.validator.generator.ModelType;
 import org.validator.generator.Generator;
-import org.validator.generator.model.ConditionModel;
-import org.validator.generator.model.ConditionObject;
-import org.validator.generator.model.FunctionDeclarationModel;
 import org.validator.generator.writer.ConditionWritableObject;
-import org.validator.parser.model.ValidatorDetail;
+import org.validator.parser.WritableParser;
 import org.validator.parser.model.ValidatorMethod;
 import org.validator.parser.ValidatorParser;
 
@@ -64,7 +60,7 @@ public class ValidatorProcessor extends AbstractProcessor {
                     continue;
                 }
                 try {
-                    loop(ValidatorParser.parse(validators, processingEnv));
+                    generateSource(ValidatorParser.parse(validators));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -79,75 +75,25 @@ public class ValidatorProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void loop(
+    private void generateSource(
             Map<String, List<ValidatorMethod>> validatorObjects)
             throws IOException {
 
         for (Map.Entry<String, List<ValidatorMethod>> entry : validatorObjects.entrySet()) {
             String className = entry.getKey();
             List<ValidatorMethod> validatorMethods = entry.getValue();
-            fill(className, validatorMethods);
-        }
-    }
+            WritableParser writableParser = new WritableParser();
+            ConditionWritableObject conditionWritableObject = writableParser.parseToWritable(className, validatorMethods);
+            try {
+                Generator generator = new Generator();
+                String classNameImpl = className + "Impl";
+                JavaFileObject builderFile = processingEnv.getFiler()
+                        .createSourceFile(classNameImpl);
+                generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
 
-    private void fill(String className, List<ValidatorMethod> validatorMethods) throws IOException {
-        String packageName = null;
-        int lastDot = className.lastIndexOf('.');
-        if (lastDot > 0) {
-            packageName = className.substring(0, lastDot);
-        }
-
-        String classNameImpl = className + "Impl";
-        String builderSimpleClassName = classNameImpl
-                .substring(lastDot + 1);
-        String interfaceName = className.substring(lastDot + 1);
-
-        JavaFileObject builderFile = processingEnv.getFiler()
-                .createSourceFile(classNameImpl);
-
-        List<ConditionObject> conditionObjects = new ArrayList<>();
-
-        validatorMethods.forEach(validatorMethod -> {
-            String argumentTypeCore = validatorMethod.getArgumentType()
-                    .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
-            String parameterName = StringUtils.uncapitalize(argumentTypeCore);
-            List<ValidatorDetail> validatorDetails = validatorMethod.getValidatorDetails();
-            String parameterType = StringUtils.capitalize(argumentTypeCore);
-            String methodName = validatorMethod.getMethodName();
-
-            FunctionDeclarationModel functionDeclarationModel = new FunctionDeclarationModel();
-            functionDeclarationModel.setMethodName(methodName);
-            functionDeclarationModel.setParameterName(parameterName);
-            functionDeclarationModel.setParameterType(parameterType);
-
-            List<ConditionModel> conditionModels = new ArrayList<>();
-
-            for(ValidatorDetail validatorDetail : validatorDetails) {
-                ConditionModel conditionModel = new ConditionModel();
-                conditionModel.setExceptionCode(validatorDetail.getErrorMessage());
-                conditionModel.setException(validatorDetail.getException().getName());
-                conditionModel.setSource(StringUtils.capitalize(validatorDetail.getSource()));
-                conditionModel.setCondition(validatorDetail.getCondition());
-                conditionModels.add(conditionModel);
+            } catch (Exception e) {
+                printError(ExceptionUtils.getStackTrace(e));
             }
-
-            ConditionObject conditionObject = new ConditionObject();
-            conditionObject.setConditionModels(conditionModels);
-            conditionObject.setFunctionDeclarationModel(functionDeclarationModel);
-            conditionObjects.add(conditionObject);
-        });
-        ConditionWritableObject conditionWritableObject = new ConditionWritableObject();
-        conditionWritableObject.setPackageName(packageName);
-        conditionWritableObject.setInterfaceName(interfaceName);
-        conditionWritableObject.setClassName(builderSimpleClassName);
-        conditionWritableObject.setConditionObjects(conditionObjects);
-
-        try {
-            Generator generator = new Generator();
-            generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
-
-        } catch (Exception e) {
-            printError(ExceptionUtils.getStackTrace(e));
         }
     }
 

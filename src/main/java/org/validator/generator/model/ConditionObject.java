@@ -1,10 +1,8 @@
 package org.validator.generator.model;
 
-
 import java.util.List;
 
 public class ConditionObject {
-
 
     private List<ConditionModel> conditionModels;
     private FunctionDeclarationModel functionDeclarationModel;
