@@ -3,7 +3,7 @@ Validator is an annotation that validate your fields! That use annotation proces
 Declare only your intention!
 
 
-You can write your validation in a interface and let validator generates your implementation.
+You can write your validation in an interface and let validator generates your implementation.
 ```
 
 
