@@ -42,4 +42,14 @@ public class ValidatorDetail {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    @Override
+    public String toString() {
+        return "ValidatorDetail{" +
+                "source='" + source + '\'' +
+                ", condition=" + condition +
+                ", exception=" + exception +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
+    }
 }

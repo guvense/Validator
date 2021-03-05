@@ -28,4 +28,13 @@ public class FunctionDeclarationModel {
     public void setParameterName(String parameterName) {
         this.parameterName = parameterName;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionDeclarationModel{" +
+                "methodName='" + methodName + '\'' +
+                ", parameterType='" + parameterType + '\'' +
+                ", parameterName='" + parameterName + '\'' +
+                '}';
+    }
 }

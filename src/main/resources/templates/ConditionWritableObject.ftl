@@ -1,5 +1,9 @@
 package ${conditionModel.packageName};
 
+<#list conditionModel.imports as import>
+    import ${import};
+</#list>
+
 import static org.validator.generator.constant.ConditionRule.*;
 import static org.validator.util.condition.ConditionRuleChecker.check;
 

@@ -89,6 +89,8 @@ public class ValidatorProcessor extends AbstractProcessor {
                 String classNameImpl = className + "Impl";
                 JavaFileObject builderFile = processingEnv.getFiler()
                         .createSourceFile(classNameImpl);
+
+                //printError(conditionWritableObject.toString());
                 generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
 
             } catch (Exception e) {
