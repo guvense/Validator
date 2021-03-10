@@ -1,7 +1,7 @@
 <p align="center">
 # Validator 
-
-
+ </p>
+<p align="center">
 <img src="./validator.svg" width="200">
  </p>
 
