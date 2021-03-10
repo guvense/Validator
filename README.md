@@ -1,6 +1,5 @@
 # Validator 
 
-![Alt text](./validator.svg)
 <img src="./validator.svg">
 
 Validator is an annotation that validate your objects! That use annotation processing which is not effect your performance! It generates codes during compile time.
