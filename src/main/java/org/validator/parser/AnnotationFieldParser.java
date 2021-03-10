@@ -32,11 +32,12 @@ public class AnnotationFieldParser {
             for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry
                     : elementValues.entrySet()) {
                 List<Attribute.Compound> values = (List<Attribute.Compound>) entry.getValue().getValue();
-                ValidatorDetail validatorDetail = new ValidatorDetail();
+
                 for (Attribute.Compound value : values) {
                     List<Pair<Symbol.MethodSymbol, Attribute>> attributes = value.values;
-                    for (Pair<Symbol.MethodSymbol, Attribute> att : attributes) {
 
+                    ValidatorDetail validatorDetail = new ValidatorDetail();
+                    for (Pair<Symbol.MethodSymbol, Attribute> att : attributes) {
                         Attribute snd = att.snd;
                         switch (att.fst.getSimpleName().toString()) {
                             case "source":

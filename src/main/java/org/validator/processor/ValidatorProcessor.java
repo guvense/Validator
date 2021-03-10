@@ -61,8 +61,6 @@ public class ValidatorProcessor extends AbstractProcessor {
                 }
                 try {
                     generateSource(ValidatorParser.parse(validators));
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } catch (Exception e) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                             "Error: " + ExceptionUtils.getStackTrace(e));
@@ -89,6 +87,8 @@ public class ValidatorProcessor extends AbstractProcessor {
                 String classNameImpl = className + "Impl";
                 JavaFileObject builderFile = processingEnv.getFiler()
                         .createSourceFile(classNameImpl);
+
+                //printError(conditionWritableObject.toString());
                 generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
 
             } catch (Exception e) {

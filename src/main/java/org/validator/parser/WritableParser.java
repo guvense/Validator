@@ -9,6 +9,7 @@ import org.validator.parser.model.ValidatorDetail;
 import org.validator.parser.model.ValidatorMethod;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WritableParser {
@@ -26,7 +27,11 @@ public class WritableParser {
 
         List<ConditionObject> conditionObjects = new ArrayList<>();
 
+        ArrayList<String> imports = new ArrayList<>();
         validatorMethods.forEach(validatorMethod -> {
+            String argumentPath = validatorMethod.getArgumentType();
+
+            imports.add(argumentPath);
             String argumentTypeCore = validatorMethod.getArgumentType()
                     .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
             String parameterName = StringUtils.uncapitalize(argumentTypeCore);
@@ -50,6 +55,7 @@ public class WritableParser {
                 conditionModels.add(conditionModel);
             }
 
+
             ConditionObject conditionObject = new ConditionObject();
             conditionObject.setConditionModels(conditionModels);
             conditionObject.setFunctionDeclarationModel(functionDeclarationModel);
@@ -60,6 +66,7 @@ public class WritableParser {
         conditionWritableObject.setInterfaceName(interfaceName);
         conditionWritableObject.setClassName(builderSimpleClassName);
         conditionWritableObject.setConditionObjects(conditionObjects);
+        conditionWritableObject.setImports(imports);
         return conditionWritableObject;
     }
 }

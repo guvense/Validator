@@ -4,5 +4,9 @@ public enum ConditionRule {
     NOOP,
     IsNotNull,
     IsNull,
-    IsGreaterThan,
+    IsBlank,
+    IsNotBlank,
+    IsPositive,
+    IsZero,
+    IsNegative
 }

@@ -16,4 +16,11 @@ public class ConditionWritableObject extends BaseModel {
     public void setConditionObjects(List<ConditionObject> conditionObjects) {
         this.conditionObjects = conditionObjects;
     }
+
+    @Override
+    public String toString() {
+        return "ConditionWritableObject{" +
+                "conditionObjects=" + conditionObjects +
+                '}';
+    }
 }

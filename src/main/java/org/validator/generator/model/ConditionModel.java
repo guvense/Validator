@@ -23,4 +23,11 @@ public class ConditionModel extends ExceptionModel {
         this.condition = condition;
     }
 
+    @Override
+    public String toString() {
+        return "ConditionModel{" +
+                "condition=" + condition +
+                ", source='" + source + '\'' +
+                '}';
+    }
 }
