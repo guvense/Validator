@@ -12,13 +12,13 @@ public class ConditionRuleChecker {
     private static Map<ConditionRule, BiPredicate<Number, Number>> CONDITION_NUMBER_RULES = new HashMap<>();
 
     static {
-        CONDITION_RULES.put(ConditionRule.IsNotNull, ConditionRuleChecker::isNotNull);
-        CONDITION_RULES.put(ConditionRule.IsNull, ConditionRuleChecker::isNull);
-        CONDITION_RULES.put(ConditionRule.IsBlank, ConditionRuleChecker::isBlank);
-        CONDITION_RULES.put(ConditionRule.IsNotBlank, ConditionRuleChecker::isNotBlank);
-        CONDITION_RULES.put(ConditionRule.IsPositive, ConditionRuleChecker::isPositive);
-        CONDITION_RULES.put(ConditionRule.IsZero, ConditionRuleChecker::isZero);
-        CONDITION_RULES.put(ConditionRule.IsNegative, ConditionRuleChecker::isNegative);
+        CONDITION_RULES.put(ConditionRule.IsNotNull, ConditionRuleChecker::isNull);
+        CONDITION_RULES.put(ConditionRule.IsNull, ConditionRuleChecker::isNotNull);
+        CONDITION_RULES.put(ConditionRule.IsBlank, ConditionRuleChecker::isNotBlank);
+        CONDITION_RULES.put(ConditionRule.IsNotBlank, ConditionRuleChecker::isBlank);
+        CONDITION_RULES.put(ConditionRule.IsPositive, ConditionRuleChecker::isNotPositive);
+        CONDITION_RULES.put(ConditionRule.IsZero, ConditionRuleChecker::isNotZero);
+        CONDITION_RULES.put(ConditionRule.IsNegative, ConditionRuleChecker::isNotNegative);
 
 
         //CONDITION_NUMBER_RULES.put(ConditionRule.IsGreaterThan, ConditionRuleChecker::isGreaterThan);
@@ -37,14 +37,19 @@ public class ConditionRuleChecker {
          return val.doubleValue() > 0 ? Boolean.TRUE : Boolean.FALSE;
     }
 
-    private static boolean isZero(Object... value) {
+    private static boolean isNotPositive(Object... value) {
         Number val = (Number)value[0];
-        return val.doubleValue() == 0 ? Boolean.TRUE : Boolean.FALSE;
+        return val.doubleValue() <= 0 ? Boolean.TRUE : Boolean.FALSE;
     }
 
-    private static boolean isNegative(Object... value) {
+    private static boolean isNotZero(Object... value) {
         Number val = (Number)value[0];
-        return val.doubleValue() < 0 ? Boolean.TRUE : Boolean.FALSE;
+        return val.doubleValue() != 0 ? Boolean.TRUE : Boolean.FALSE;
+    }
+
+    private static boolean isNotNegative(Object... value) {
+        Number val = (Number)value[0];
+        return val.doubleValue() >= 0 ? Boolean.TRUE : Boolean.FALSE;
     }
 
 
