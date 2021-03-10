@@ -1,5 +1,5 @@
 # Validator :rainbow:
-Validator is an annotation that validate your fields! That use annotation processing which is not effect your performance! It generates codes during compile time.
+Validator is an annotation that validate your objects! That use annotation processing which is not effect your performance! It generates codes during compile time.
 Declare only your intention!
 
 
