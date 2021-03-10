@@ -9,21 +9,23 @@ You can write your validation in an interface and let validator generates your i
 
 public interface PersonValidator {
 
+
     @Valid(source = "name",
             errorMessage = "Name is not blank",
             targetException = NullPointerException.class,
             condition = ConditionRule.IsNotBlank)
     @Valid(source = "age",
-            errorMessage = "Age is not null",
-            targetException = NullPointerException.class,
-            condition = ConditionRule.IsNotNull)
-    @Valid(source = "count",
-            errorMessage = "Count not be negative",
+            errorMessage = "Age should be positive",
             targetException = NullPointerException.class,
             condition = ConditionRule.IsPositive)
+    @Valid(source = "count",
+            errorMessage = "Count should be zero",
+            targetException = NullPointerException.class,
+            condition = ConditionRule.IsZero)
     void validate(Person person);
 
 }
+
             
 ```
 
@@ -47,22 +49,23 @@ public class PersonValidatorImpl implements PersonValidator
 
     public void validate(Person person) {
 
-        if(check(IsNotNull,  person.getName())) {
+        if(check(IsNotBlank,  person.getName())) {
 
             throw new java.lang.NullPointerException("Name is not blank");
 
         }
-        if(check(IsNotNull,  person.getAge())) {
+        if(check(IsPositive,  person.getAge())) {
 
-            throw new java.lang.NullPointerException("Age is not null");
+            throw new java.lang.NullPointerException("Age should be positive");
 
         }
-        if(check(IsNull,  person.getCount())) {
+        if(check(IsZero,  person.getCount())) {
 
-            throw new java.lang.NullPointerException("Count not be negative");
+            throw new java.lang.NullPointerException("Count should be zero");
 
         }
     }
+}
 
 
 ```
