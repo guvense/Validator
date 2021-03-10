@@ -47,22 +47,22 @@ public class PersonValidatorImpl implements PersonValidator
 
     public void validate(Person person) {
 
-        if(check(IsPositive,  person.getCount())) {
+        if(check(IsNotNull,  person.getName())) {
 
-            throw new java.lang.NullPointerException("Count not be negative");
-
-        }
-        if(check(IsPositive,  person.getCount())) {
-
-            throw new java.lang.NullPointerException("Count not be negative");
+            throw new java.lang.NullPointerException("Name is not blank");
 
         }
-        if(check(IsPositive,  person.getCount())) {
+        if(check(IsNotNull,  person.getAge())) {
+
+            throw new java.lang.NullPointerException("Age is not null");
+
+        }
+        if(check(IsNull,  person.getCount())) {
 
             throw new java.lang.NullPointerException("Count not be negative");
 
         }
     }
-}
+
 
 ```
