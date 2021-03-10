@@ -61,8 +61,6 @@ public class ValidatorProcessor extends AbstractProcessor {
                 }
                 try {
                     generateSource(ValidatorParser.parse(validators));
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } catch (Exception e) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
                             "Error: " + ExceptionUtils.getStackTrace(e));
