@@ -9,7 +9,6 @@ import org.validator.parser.model.ValidatorDetail;
 import org.validator.parser.model.ValidatorMethod;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WritableParser {
@@ -29,14 +28,10 @@ public class WritableParser {
 
         ArrayList<String> imports = new ArrayList<>();
         validatorMethods.forEach(validatorMethod -> {
-            String argumentPath = validatorMethod.getArgumentType();
+            fillImportPaths(imports, validatorMethod);
 
-            imports.add(argumentPath);
-            String argumentTypeCore = validatorMethod.getArgumentType()
-                    .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
-            String parameterName = StringUtils.uncapitalize(argumentTypeCore);
-            List<ValidatorDetail> validatorDetails = validatorMethod.getValidatorDetails();
-            String parameterType = StringUtils.capitalize(argumentTypeCore);
+            String parameterName = extractParameterName(validatorMethod);
+            String parameterType = extractParameterType(parameterName);
             String methodName = validatorMethod.getMethodName();
 
             FunctionDeclarationModel functionDeclarationModel = new FunctionDeclarationModel();
@@ -44,6 +39,7 @@ public class WritableParser {
             functionDeclarationModel.setParameterName(parameterName);
             functionDeclarationModel.setParameterType(parameterType);
 
+            List<ValidatorDetail> validatorDetails = validatorMethod.getValidatorDetails();
             List<ConditionModel> conditionModels = new ArrayList<>();
 
             for(ValidatorDetail validatorDetail : validatorDetails) {
@@ -54,7 +50,6 @@ public class WritableParser {
                 conditionModel.setCondition(validatorDetail.getCondition());
                 conditionModels.add(conditionModel);
             }
-
 
             ConditionObject conditionObject = new ConditionObject();
             conditionObject.setConditionModels(conditionModels);
@@ -68,5 +63,21 @@ public class WritableParser {
         conditionWritableObject.setConditionObjects(conditionObjects);
         conditionWritableObject.setImports(imports);
         return conditionWritableObject;
+    }
+
+    private String extractParameterType(String parameterName) {
+        return StringUtils.capitalize(parameterName);
+    }
+
+    private String extractParameterName(ValidatorMethod validatorMethod) {
+        String argumentTypeCore = validatorMethod.getArgumentType()
+                .substring(validatorMethod.getArgumentType().lastIndexOf(".") + 1);
+        return StringUtils.uncapitalize(argumentTypeCore);
+    }
+
+    private void fillImportPaths(ArrayList<String> imports, ValidatorMethod validatorMethod) {
+        String argumentPath = validatorMethod.getArgumentType();
+
+        imports.add(argumentPath);
     }
 }

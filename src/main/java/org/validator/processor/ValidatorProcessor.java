@@ -44,31 +44,26 @@ public class ValidatorProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        try {
-            for (TypeElement annotation : annotations) {
+        for (TypeElement annotation : annotations) {
 
-                Set<? extends Element> annotatedElements
-                        = roundEnv.getElementsAnnotatedWith(annotation);
+            Set<? extends Element> annotatedElements
+                    = roundEnv.getElementsAnnotatedWith(annotation);
 
-                Map<Boolean, List<Element>> annotatedMethods =
-                        annotatedElements.stream().collect(
-                                Collectors.partitioningBy(element ->
-                                        ((ExecutableType) element.asType()).getParameterTypes().size() == 1));
+            Map<Boolean, List<Element>> annotatedMethods =
+                    annotatedElements.stream().collect(
+                            Collectors.partitioningBy(element ->
+                                    ((ExecutableType) element.asType()).getParameterTypes().size() == 1));
 
-                List<Element> validators = annotatedMethods.get(true);
-                if (validators.isEmpty()) {
-                    continue;
-                }
-                try {
-                    generateSource(ValidatorParser.parse(validators));
-                } catch (Exception e) {
-                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                            "Error: " + ExceptionUtils.getStackTrace(e));
-                }
+            List<Element> validators = annotatedMethods.get(true);
+            if (validators.isEmpty()) {
+                continue;
             }
-        } catch (Exception e) {
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                    "Error" + ExceptionUtils.getStackTrace(e));
+            try {
+                generateSource(ValidatorParser.parse(validators));
+            } catch (Exception e) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+                        "Error: " + ExceptionUtils.getStackTrace(e));
+            }
         }
         return true;
     }
@@ -82,22 +77,12 @@ public class ValidatorProcessor extends AbstractProcessor {
             List<ValidatorMethod> validatorMethods = entry.getValue();
             WritableParser writableParser = new WritableParser();
             ConditionWritableObject conditionWritableObject = writableParser.parseToWritable(className, validatorMethods);
-            try {
-                Generator generator = new Generator();
-                String classNameImpl = className + "Impl";
-                JavaFileObject builderFile = processingEnv.getFiler()
-                        .createSourceFile(classNameImpl);
 
-                //printError(conditionWritableObject.toString());
-                generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
-
-            } catch (Exception e) {
-                printError(ExceptionUtils.getStackTrace(e));
-            }
+            Generator generator = new Generator();
+            String classNameImpl = className + "Impl";
+            JavaFileObject builderFile = processingEnv.getFiler()
+                    .createSourceFile(classNameImpl);
+            generator.write(builderFile, conditionWritableObject, ModelType.CONDITION);
         }
-    }
-
-    private void printError(String errorMessage) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, errorMessage);
     }
 }
