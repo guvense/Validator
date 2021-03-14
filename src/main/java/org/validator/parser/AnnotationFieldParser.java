@@ -4,8 +4,8 @@ package org.validator.parser;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Pair;
-import org.validator.annotation.Valid;
 import org.validator.generator.constant.ConditionRule;
+import org.validator.generator.constant.Pattern;
 import org.validator.parser.model.ValidatorDetail;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -46,6 +46,10 @@ public class AnnotationFieldParser {
                             case "condition":
                                 VariableElement el = (VariableElement) snd.getValue();
                                 validatorDetail.setCondition(ConditionRule.valueOf(el.getSimpleName().toString()));
+                                break;
+                            case "pattern":
+                                VariableElement pattern = (VariableElement) snd.getValue();
+                                validatorDetail.setPattern(Pattern.valueOf(pattern.getSimpleName().toString()));
                                 break;
                             case "targetException":
                                 TypeMirror typeMirror = (TypeMirror) snd.getValue();

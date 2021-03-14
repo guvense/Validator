@@ -2,10 +2,12 @@ package org.validator.parser.model;
 
 
 import org.validator.generator.constant.ConditionRule;
+import org.validator.generator.constant.Pattern;
 
 public class ValidatorDetail {
     private String source;
     private ConditionRule condition;
+    private Pattern pattern;
     private Class<? extends Throwable>  exception;
     private String errorMessage;
 
@@ -43,13 +45,11 @@ public class ValidatorDetail {
         this.errorMessage = errorMessage;
     }
 
-    @Override
-    public String toString() {
-        return "ValidatorDetail{" +
-                "source='" + source + '\'' +
-                ", condition=" + condition +
-                ", exception=" + exception +
-                ", errorMessage='" + errorMessage + '\'' +
-                '}';
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(Pattern pattern) {
+        this.pattern = pattern;
     }
 }

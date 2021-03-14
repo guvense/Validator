@@ -5,6 +5,7 @@ import java.util.List;
 public class ConditionObject {
 
     private List<ConditionModel> conditionModels;
+    private List<PatternModel> patternModels;
     private List<String> imports;
     private FunctionDeclarationModel functionDeclarationModel;
 
@@ -30,6 +31,14 @@ public class ConditionObject {
 
     public void setFunctionDeclarationModel(FunctionDeclarationModel functionDeclarationModel) {
         this.functionDeclarationModel = functionDeclarationModel;
+    }
+
+    public List<PatternModel> getPatternModels() {
+        return patternModels;
+    }
+
+    public void setPatternModels(List<PatternModel> patternModels) {
+        this.patternModels = patternModels;
     }
 
     @Override
