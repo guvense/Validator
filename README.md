@@ -8,6 +8,10 @@ Validator is an annotation that validate your objects! That use annotation proce
 Declare only your intention!
 
 
+- Condition Checker
+- Pattern Matcher
+
+
 You can write your validation in an interface and let validator generates your implementation.
 ```
 
