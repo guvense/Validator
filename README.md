@@ -8,16 +8,20 @@ Validator is an annotation that validate your objects! That use annotation proce
 Declare only your intention!
 
 
+- Condition Checker
+- Pattern Matcher
+
+
 You can write your validation in an interface and let validator generates your implementation.
 ```
-
 
 public interface PersonValidator {
 
 
     @Valid(source = "name",
             errorMessage = "Name is not blank",
-            targetException = NullPointerException.class,
+            targetException =
+                    NullPointerException.class,
             condition = ConditionRule.IsNotBlank)
     @Valid(source = "age",
             errorMessage = "Age should be positive",
@@ -27,9 +31,16 @@ public interface PersonValidator {
             errorMessage = "Count should be zero",
             targetException = NullPointerException.class,
             condition = ConditionRule.IsZero)
+    @Valid(
+            source = "email",
+            errorMessage = "Not valid email",
+            targetException = NullPointerException.class,
+            pattern = Pattern.EMAIL
+    )
     void validate(Person person);
 
 }
+
 
             
 ```
@@ -39,13 +50,17 @@ Validator will generate
 
 
 ```
-
 package validator;
 
     import model.Person;
 
+
 import static org.validator.generator.constant.ConditionRule.*;
-import static org.validator.util.condition.ConditionRuleChecker.check;
+import org.validator.util.condition.ConditionRuleChecker;
+
+import static org.validator.generator.constant.Pattern.*;
+import org.validator.util.pattern.PatternMatcher;
+
 
 @Component
 public class PersonValidatorImpl implements PersonValidator
@@ -54,23 +69,20 @@ public class PersonValidatorImpl implements PersonValidator
 
     public void validate(Person person) {
 
-        if(check(IsNotBlank,  person.getName())) {
-
+        if(ConditionRuleChecker.check(IsNotBlank,  person.getName())) {
             throw new java.lang.NullPointerException("Name is not blank");
-
         }
-        if(check(IsPositive,  person.getAge())) {
-
+        if(ConditionRuleChecker.check(IsPositive,  person.getAge())) {
             throw new java.lang.NullPointerException("Age should be positive");
-
         }
-        if(check(IsZero,  person.getCount())) {
-
+        if(ConditionRuleChecker.check(IsZero,  person.getCount())) {
             throw new java.lang.NullPointerException("Count should be zero");
+        }
 
+        if(PatternMatcher.validate(EMAIL,  person.getEmail())) {
+            throw new java.lang.NullPointerException("Not valid email");
         }
     }
 }
-
 
 ```
