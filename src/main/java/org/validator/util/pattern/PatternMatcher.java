@@ -17,7 +17,7 @@ public class PatternMatcher {
     private static boolean validateIsNotEmail(Object... value) {
         String regex = "^(.+)@(.+)$";
         Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher((String) value[0]).matches();
+        return !pattern.matcher((String) value[0]).matches();
     }
 
     public static boolean validate(org.validator.generator.constant.Pattern rule, Object o) {
