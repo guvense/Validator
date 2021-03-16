@@ -92,7 +92,6 @@ public class WritableParser {
 
         private void fillImportPaths (ArrayList < String > imports, ValidatorMethod validatorMethod){
             String argumentPath = validatorMethod.getArgumentType();
-
             imports.add(argumentPath);
         }
     }
