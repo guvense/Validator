@@ -4,8 +4,7 @@
 <img src="./validator.svg" width="200">
  </p>
 
-Validator is an annotation that validate your objects! That use annotation processing which is not effect your performance! It generates codes during compile time.
-Declare only your intention!
+Validator is an annotation that validates your objects. That use annotation processing which is not affecting your performance. It generates codes during compile time. 
 
 
 - Condition Checker
