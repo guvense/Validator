@@ -4,6 +4,7 @@ package ${conditionModel.packageName};
     import ${import};
 </#list>
 
+import org.springframework.stereotype.Component;
 
 import static org.validator.generator.constant.ConditionRule.*;
 import org.validator.util.condition.ConditionRuleChecker;

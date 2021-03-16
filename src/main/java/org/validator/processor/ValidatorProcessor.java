@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@SupportedAnnotationTypes(
-        "org.validator.annotation.Valids")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedAnnotationTypes({
+        "org.validator.annotation.Valids",
+        "org.validator.annotation.Valid"})
 @AutoService(Processor.class)
 public class ValidatorProcessor extends AbstractProcessor {
 
