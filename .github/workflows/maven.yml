@@ -20,6 +20,11 @@ jobs:
         server-password: MAVEN_PASSWORD
         gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
         gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+    - name: Create key
+      run: |
+          cat <(echo -e "${{ secrets.MAVEN_GPG_PRIVATE_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
     - name: Deploy with Maven
       run: mvn -B clean deploy -Pci-cd
       env:
