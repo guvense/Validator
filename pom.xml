@@ -55,6 +55,9 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <bootclasspath>${java.home}/lib/rt.jar${path.separator}${java.home}/lib/jce.jar${path.separator}${java.home}/../lib/tools.jar</bootclasspath>
+                    </compilerArguments>
                 </configuration>
             </plugin>
             <plugin>

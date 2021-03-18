@@ -4,6 +4,7 @@ package org.validator.parser;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Pair;
+
 import org.validator.generator.constant.ConditionRule;
 import org.validator.generator.constant.Pattern;
 import org.validator.parser.model.ValidatorDetail;
