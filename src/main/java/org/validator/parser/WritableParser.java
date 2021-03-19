@@ -90,7 +90,6 @@ public class WritableParser {
             return StringUtils.uncapitalize(argumentTypeCore);
         }
 
-
         private void fillImportPaths (ArrayList < String > imports, ValidatorMethod validatorMethod){
             String argumentPath = validatorMethod.getArgumentType();
             imports.add(argumentPath);
