@@ -7,12 +7,24 @@
     <groupId>io.github.guvense</groupId>
     <artifactId>validator</artifactId>
     <version>1.0.0</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Object Validator</description>
+    <url>https://github.com/guvense/Validator</url>
     <properties>
         <auto-service.version>1.0-rc2</auto-service.version>
         <maven-compiler-plugin.version>
             3.5.1
         </maven-compiler-plugin.version>
     </properties>
+
+
+    <developers>
+        <developer>
+            <id>guvense</id>
+            <name>Guven Seckin</name>
+            <email>guven.seckin.4@gmail.com</email>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
